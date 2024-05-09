@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Подписка на изменения статуса подключения
     tonConnectUI.onStatusChange(wallet => {
         console.log('tonConnectUI onStatusChange called');
+        console.log(`tonConnectUI wallet: ${wallet}`);
+        console.log(`tonConnectUI wallet.balance: ${wallet.balance}`);
 
         // Проверка, подключен ли кошелек и есть ли информация о балансе
         if (wallet && wallet.balance) {
