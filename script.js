@@ -1,29 +1,18 @@
-const tonweb = new TonWeb();
-const provider = new tonweb.Provider.HttpProvider('https://toncenter.com/api/v2/jsonRPC'); // URL API зависит от провайдера
+// Инициализация экземпляра TonConnectUI для подключения и взаимодействия с TON blockchain.
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: 'https://devpravosudov.github.io/ton-lottery/tonconnect-manifest.json',
+    buttonRootId: 'ton-connect'
+});
 
-async function getWalletBalance(walletAddress) {
-    const wallet = tonweb.wallet.create({address: walletAddress});
-    const balance = await wallet.getBalance();
-    return tonweb.utils.fromNano(balance); // Конвертируем нанотоны в тоны
-}
-
-// Функция для отображения баланса
-// async function displayBalance() {
-//     const walletData = await tonConnectUI.getWallet();
-//     const walletAddress = walletData.address;
-//     const balance = await getWalletBalance(walletAddress);
-//     document.getElementById('wallet-balance').innerText = `Баланс: ${balance} TON`;
-// }
-
-async function displayBalance(walletAddress) {
-    const balance = await getWalletBalance(walletAddress);
-    document.getElementById('wallet-balance').innerText = `Баланс: ${balance} TON`;
-}
-
-// displayBalance();
-
-tonConnectUI.on('connect', async (wallet) => {
-    // Теперь кошелек подключен, можно получить данные
-    displayBalance(wallet.address);
+// Подписка на изменения статуса подключения
+tonConnectUI.onStatusChange(wallet => {
+    // Проверка, подключен ли кошелек и есть ли информация о балансе
+    if (wallet && wallet.balance) {
+        // Обновление баланса на веб-странице
+        document.getElementById('wallet-balance').innerText = `Баланс: ${wallet.balance}`;
+    } else {
+        // Если кошелек отключен или информация о балансе недоступна, отобразить сообщение
+        document.getElementById('wallet-balance').innerText = 'Баланс: Н/Д';
+    }
 });
 
