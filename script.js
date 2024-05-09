@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     tonConnectUI.onStatusChange(wallet => {
         console.log('tonConnectUI onStatusChange called');
         console.log(`tonConnectUI wallet: ${JSON.stringify(wallet, null, 2)}`);
-        console.log(`tonConnectUI wallet.balance: ${wallet.balance}`);
+        console.log(`tonConnectUI wallet.account.pyblicKey: ${wallet.account.publicKey}`);
 
         // Проверка, подключен ли кошелек и есть ли информация о балансе
         if (wallet && wallet.balance) {
