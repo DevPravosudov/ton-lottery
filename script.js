@@ -1,11 +1,13 @@
-// Инициализация TonWeb с использованием глобального объекта TonWeb
-const tonweb = new TonWeb(new TonWeb.HttpProvider('https://test.toncenter.com/api/v2/jsonRPC'));
+// Инициализация TonWeb с использованием API ключа
+const tonweb = new window.TonWeb(new window.TonWeb.HttpProvider('https://testnet.toncenter.com/api/v2/jsonRPC', {
+    apiKey: '759989c9519c207eec918dc0c5d289a521eb1395ab4474c518819edf621d5b5e'
+}));
 
 // Функция для получения баланса
 async function getBalance(walletAddress) {
     try {
         const balance = await tonweb.getBalance(walletAddress); // Получаем баланс кошелька
-        console.log("Баланс кошелька: ", TonWeb.utils.fromNano(balance)); // Выводим баланс в читаемом формате
+        console.log("Баланс кошелька: ", window.TonWeb.utils.fromNano(balance)); // Выводим баланс в читаемом формате
         return balance;
     } catch (error) {
         console.error("Ошибка при получении баланса: ", error);
