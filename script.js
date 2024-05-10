@@ -3,12 +3,18 @@ const tonweb = new window.TonWeb(new window.TonWeb.HttpProvider('https://testnet
     apiKey: '759989c9519c207eec918dc0c5d289a521eb1395ab4474c518819edf621d5b5e'
 }));
 
+// Функция для преобразования баланса из наноединиц в читаемый вид
+function formatBalance(nanoBalance) {
+    return window.TonWeb.utils.fromNano(nanoBalance) + ' TON';  // Добавляем единицу измерения для ясности
+}
+
 // Функция для получения баланса
 async function getBalance(walletAddress) {
     try {
         const balance = await tonweb.getBalance(walletAddress); // Получаем баланс кошелька
-        console.log("Баланс кошелька: ", window.TonWeb.utils.fromNano(balance)); // Выводим баланс в читаемом формате
-        return balance;
+        const formattedBalance = formatBalance(balance);
+        console.log("Баланс кошелька: ", formattedBalance); // Выводим баланс в читаемом формате
+        return formattedBalance;
     } catch (error) {
         console.error("Ошибка при получении баланса: ", error);
     }
