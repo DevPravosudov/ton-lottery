@@ -1,31 +1,16 @@
-// const { TonClient } = require("ton-client-js");
+// Инициализация TonWeb с использованием глобального объекта TonWeb
+const tonweb = new TonWeb(new TonWeb.HttpProvider('https://test.toncenter.com/api/v2/jsonRPC'));
 
-// // Создание экземпляра клиента TON
-// const client = new TonClient({
-//     network: {
-//         endpoints: ['https://net.ton.dev'] // URL к одному из доступных API блокчейна TON
-//     }
-// });
-
-// // Функция для получения баланса
-// async function getWalletBalance(address) {
-//     try {
-//         const { result } = await client.net.query_collection({
-//             collection: 'accounts',
-//             filter: { id: { eq: address } },
-//             result: 'balance'
-//         });
-
-//         if (result.length > 0) {
-//             const balance = result[0].balance;
-//             return balance;
-//         }
-//         return null;
-//     } catch (error) {
-//         console.error("Ошибка:", error);
-//         return null;
-//     }
-// }
+// Функция для получения баланса
+async function getBalance(walletAddress) {
+    try {
+        const balance = await tonweb.getBalance(walletAddress); // Получаем баланс кошелька
+        console.log("Баланс кошелька: ", TonWeb.utils.fromNano(balance)); // Выводим баланс в читаемом формате
+        return balance;
+    } catch (error) {
+        console.error("Ошибка при получении баланса: ", error);
+    }
+}
 
 // Добавление обработчика события 'DOMContentLoaded' для выполнения кода после полной загрузки DOM.
 document.addEventListener('DOMContentLoaded', function() {
@@ -42,16 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
     tonConnectUI.onStatusChange(async wallet => {
         console.log('tonConnectUI onStatusChange called');
         console.log(`tonConnectUI wallet: ${JSON.stringify(wallet, null, 2)}`);
-        console.log(`tonConnectUI wallet.account.pyblicKey: ${wallet.account.publicKey}`);
+        console.log(`tonConnectUI wallet.account.address: ${wallet.account.address}`);
 
-        // const balance = await getWalletBalance(wallet.account.address);
-        // console.log(`balance from TON: ${balance}`);
+        const balance = await getBalance(wallet.account.address);
+        console.log(`balance from TON: ${balance}`);
 
         // Проверка, подключен ли кошелек и есть ли информация о балансе
-        if (wallet && wallet.account.publicKey) {
+        if (wallet && balance) {
             console.log('tonConnectUI onStatusChange wallet exist and wallet.balance');
             // Обновление баланса на веб-странице
-            document.getElementById('wallet-balance').innerText = `Баланс: ${wallet.account.publicKey}`;
+            document.getElementById('wallet-balance').innerText = `Баланс: ${balance}`;
         } else {
             console.log('tonConnectUI onStatusChange else closure called');
             // Если кошелек отключен или информация о балансе недоступна, отобразить сообщение
